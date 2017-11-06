@@ -14,7 +14,15 @@ public class Picture {
 	private ARGBPixel pixels[][];
 	
 	public Picture(String filepath) {
-		
+		try{
+		      f = new File(filepath);
+		      img = ImageIO.read(f);
+		    }catch(IOException e){
+		      System.out.println(e);
+		    }
+		height = img.getHeight();
+		width = img.getWidth();
+		pixels = new ARGBPixel[width][height];
 	}
 	
 	public Picture(ARGBPixel[][] pixels){
@@ -39,4 +47,3 @@ public class Picture {
 		return height;
 	}
 }
-
