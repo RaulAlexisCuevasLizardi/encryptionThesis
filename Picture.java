@@ -46,4 +46,17 @@ public class Picture {
 	public int getHeight() {
 		return height;
 	}
+	
+	public BufferedImage getImage(){
+		return img;
+	}
+	
+	public void export(String outputFilename){
+		try{
+			f = new File("C:\\Users\\841111795\\Desktop\\" + outputFilename + ".jpg");
+			ImageIO.write(img, "jpg", f);
+		}catch(IOException e){
+			System.out.println(e);
+		}
+	}
 }
