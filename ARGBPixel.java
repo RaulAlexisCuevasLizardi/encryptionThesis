@@ -99,7 +99,7 @@ public class ARGBPixel {
 
 	@Override
 	public String toString() {
-		return "Pixel [p=" + p + ", alpha=" + alpha + ", red=" + red
+		return "ARGBPixel [p=" + p + ", alpha=" + alpha + ", red=" + red
 				+ ", green=" + green + ", blue=" + blue + "]";
 	}
 }
