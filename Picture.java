@@ -8,7 +8,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-public class Picture {
+public class Picture{
 	private static File f;
 	private static BufferedImage img;
 	private final int width;
@@ -81,14 +81,47 @@ public class Picture {
 		}
 	}
 	
-	public void randomizePixels(){
-		for(int i = 0; i < width; i++)
-			for(int j = 0; j < height; j++)
-				changeSpecificPixel(i, j);
+	public void pixelSort() throws PixelValueException{
+		//****Sorting algorithm taken from the Internet****
+		 int temp = 0;
+         for(int x = 0; x < width; x++)
+         {
+             for(int y = 0; y < height; y++)
+             {
+                 for(int i = 0; i < width; i++)
+                 {
+                     for(int j = 0; j < height; j++)
+                     {
+                    	 if(pixels[i][j].compareTo(pixels[x][y]) > 0)
+                         {
+                             temp = pixels[x][y].getP();
+                             pixels[x][y].setP(pixels[i][j].getP());
+                             pixels[i][j].setP(temp);
+                         }
+                     }
+                 }
+             }
+         }
+		
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				int color = pixels[i][j].getP();
+				changeSpecificPixel(i, j, color);
+			}
+		}
+		
 	}
 	
-	private void changeSpecificPixel(int i, int j){
-		int color = new Random().nextInt();
+	public void randomizePixels(){
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				int color = new Random().nextInt();
+				changeSpecificPixel(i, j, color);
+			}
+		}
+	}
+	
+	private void changeSpecificPixel(int i, int j, int color){
 		img.setRGB(i, j, color);
 		try {
 			pixels[i][j].setP(color);
