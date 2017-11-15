@@ -47,11 +47,22 @@ public class PixelManipulation {
 		pic.export(outputFilename); 
 		System.out.println("Exported. Press enter...");
 		kb.nextLine();
+		
+		System.out.println("Sorting...");
+		pic.pixelSort();
+		kb.nextLine();
+		System.out.println("Enter a different file name for the sorted picture to be exported.");
+		outputFilename = kb.nextLine();
+		pic.export(outputFilename);
+		System.out.println("Exported. Press enter...");
+		kb.nextLine();
+		
 		System.out.println("Randomizing...");
 		pic.randomizePixels();
 		System.out.println("Enter a different file name for the randomized picture to be exported.");
 		outputFilename = kb.nextLine();
 		pic.export(outputFilename);
+		System.out.println("Exported.");
 		
 	}
 }
