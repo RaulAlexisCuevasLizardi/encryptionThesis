@@ -1,6 +1,6 @@
 package test;
 
-public class ARGBPixel {
+public class ARGBPixel implements Comparable<ARGBPixel>{
 	private int p;
 	private int alpha;
 	private int red;
@@ -101,5 +101,10 @@ public class ARGBPixel {
 	public String toString() {
 		return "ARGBPixel [p=" + p + ", alpha=" + alpha + ", red=" + red
 				+ ", green=" + green + ", blue=" + blue + "]";
+	}
+
+	@Override
+	public int compareTo(ARGBPixel anotherPixel) {
+		return Integer.compare(this.p, anotherPixel.getP());
 	}
 }
