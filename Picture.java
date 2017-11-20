@@ -1,4 +1,4 @@
-package test;
+package version_1;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,8 +11,8 @@ import javax.imageio.ImageIO;
 public class Picture{
 	private static File f;
 	private static BufferedImage img;
-	private final int width;
-	private final int height;
+	public final int width;
+	public final int height;
 	private ARGBPixel pixels[][];
 	
 	public Picture(String filepath) {
@@ -48,15 +48,9 @@ public class Picture{
 	}
 
 	public void setPixels(ARGBPixel[][] pixels) {
-		this.pixels = pixels;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
+		if(pixels.length == this.pixels.length && pixels[0].length == this.pixels[0].length ){
+			this.pixels = pixels;
+		}
 	}
 	
 	public BufferedImage getImage(){
