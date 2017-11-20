@@ -1,4 +1,4 @@
-package test;
+package version_1;
 
 public class PixelValueException extends Exception {
 
