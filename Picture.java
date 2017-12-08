@@ -5,15 +5,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
 
+/**
+ * 
+ * @author 841111795
+ *
+ */
 public class Picture{
-	private static File f;
-	private static BufferedImage img;
-	public final int width;
-	public final int height;
-	private ARGBPixel pixels[][];
+	private static File f; //The file that contains the image for this picture.
+	private static BufferedImage img; //An object that contains the data for this picture.
+	public final int width; //Width of this picture.
+	public final int height; //Height of this picture.
+	private ARGBPixel pixels[][]; //Double array of ARGBPixels that represent this picture. 
 
 	/**
 	 * Constructor of the Picture class that receives the filepath of the picture. Using the filepath it creates a file object and 
