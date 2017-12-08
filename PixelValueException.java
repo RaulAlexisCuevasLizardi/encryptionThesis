@@ -1,5 +1,10 @@
 package version_1;
 
+/**
+ * 
+ * @author 841111795
+ *
+ */
 public class PixelValueException extends Exception {
 
 	private static final long serialVersionUID = 1L;
