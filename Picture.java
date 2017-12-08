@@ -50,7 +50,7 @@ public class Picture{
 	/**
 	 * Constructor of the Picture class that receives a double array of ARGBPixels. The received double array's length and height
 	 * should represent the width and height of the picture respectively. Also initializes the height and width of the Picture.
-	 * @param pixels
+	 * @param pixels represents this picture's pixels.
 	 */
 	public Picture(ARGBPixel[][] pixels){
 		this.pixels = pixels;
@@ -110,7 +110,7 @@ public class Picture{
 	/**
 	 * Sorts the double array of ARGBPixels so that the P value of the pixels are sorted from lowest to highest where index
 	 * [0][0] is the starting point and [length-1][length-1] is the end point.
-	 * @throws PixelValueException 
+	 * @throws PixelValueException if a pixel's P value exceeds Integer.Maximum or is less than 0.
 	 */
 	public void pixelSort() throws PixelValueException{
 		//****Sorting algorithm taken from the Internet****
