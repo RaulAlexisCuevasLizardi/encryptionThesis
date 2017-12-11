@@ -13,6 +13,7 @@ public class PixelManipulation {
 	public static void main(String[] args) throws PixelValueException {
 		kb = new Scanner(System.in);
 		pic = new Picture("C:\\Users\\841111795\\Desktop\\images.png");
+		System.out.println(pic.P_ValueToString());
 		PictureEncryptor c = new PictureEncryptor(pic);
 		
 		System.out.println("Enter the file name of the picture that will be encrypted.");
