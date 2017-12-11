@@ -3,6 +3,7 @@ package version_1;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Random;
 import javax.imageio.ImageIO;
@@ -168,5 +169,24 @@ public class Picture{
 		} catch (PixelValueException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * This method returns a string with all the P values of every pixel in this picture
+	 * THIS NEEDS SOME CHANGING. I THINK IT MIGHT BE BETTER TO CONVERT THE INT VALUE INTO
+	 * BYTES SO THAT THEY ARE EASIER TO MANAGE.
+	 * @return
+	 */
+	public String P_ValueToString(){
+		StringBuilder str = new StringBuilder();
+		DecimalFormat fmt = new DecimalFormat("0000");
+		for(int i = 0; i < this.width; i++){
+			for(int j = 0; j < this.height; j++){
+				String p_value = String.valueOf(fmt.format(this.pixels[i][j].getP()));
+				str.append(p_value);
+			}
+		}
+		return str.toString();
+		
 	}
 }
