@@ -6,11 +6,18 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.Font;
+import java.awt.Image;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PixelManipulation extends JFrame {
 
@@ -20,7 +27,10 @@ public class PixelManipulation extends JFrame {
 	static File f = null;
 	static Scanner kb;
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField newPhotoTitleTextField;
+	@SuppressWarnings("unused")
+	private JLabel photoPanel;
+	private JLabel photoLabel;
 
 	/**
 	 * Launch the application.
@@ -28,19 +38,18 @@ public class PixelManipulation extends JFrame {
 	 */
 	public static void main(String[] args) throws PixelValueException {
 		kb = new Scanner(System.in);
-		pic = new Picture("C:\\Users\\841111795\\Desktop\\images.png");
-		System.out.println(pic.P_ValueToString());
-		PictureEncryptor c = new PictureEncryptor(pic);
-		
-		System.out.println("Enter the file name of the picture that will be encrypted.");
-		String outputFilename = kb.nextLine();
-		c.Encrypt();
-		c.ExportPicture(outputFilename);
+		pic = null;
+		PictureEncryptor c = null;
+		//		System.out.println("Enter the file name of the picture that will be encrypted.");
+		//		String outputFilename = kb.nextLine();
+		//		c.Encrypt();
+		//		c.ExportPicture(outputFilename);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					PixelManipulation frame = new PixelManipulation();
 					frame.setVisible(true);
+					System.out.println("Window loaded.");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -60,58 +69,120 @@ public class PixelManipulation extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+
+		JPanel fullPanel = new JPanel();
+		fullPanel.setBounds(0, 0, 609, 587);
+		contentPane.add(fullPanel);
+		fullPanel.setLayout(null);
+
+		JPanel photoPanel = new JPanel();
+		photoPanel.setBackground(Color.WHITE);
+		photoPanel.setBounds(10, 36, 589, 432);
+		fullPanel.add(photoPanel);
+		photoPanel.setLayout(null);
+		photoLabel = new JLabel();
+		photoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		photoLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+		photoLabel.setText("Your photo will be displayed here");
+		photoLabel.setBounds(0, 0, 589, 432);
+		photoPanel.add(photoLabel);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 609, 587);
-		contentPane.add(panel);
-		panel.setLayout(null);
+		photoLabel.setForeground(Color.BLACK);
+		photoLabel.setBackground(Color.WHITE);
 		
-		JButton btnNewButton = new JButton("Browse...");
-		btnNewButton.setBounds(10, 518, 95, 47);
-		panel.add(btnNewButton);
+		JButton browseButton = new JButton("Browse...");
 		
-		JLabel lblNewLabel = new JLabel("Search for a picture");
-		lblNewLabel.setLabelFor(btnNewButton);
-		lblNewLabel.setBounds(10, 479, 137, 23);
-		panel.add(lblNewLabel);
+		browseButton.setBounds(10, 518, 95, 47);
+		fullPanel.add(browseButton);
+
+		JLabel searchForPictureLabel = new JLabel("Search for a picture");
+		searchForPictureLabel.setLabelFor(browseButton);
+		searchForPictureLabel.setBounds(10, 479, 137, 23);
+		fullPanel.add(searchForPictureLabel);
+
+		JLabel toEncryptLabel = new JLabel("to encrypt");
+		toEncryptLabel.setBounds(10, 498, 67, 14);
+		fullPanel.add(toEncryptLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("to encrypt");
-		lblNewLabel_1.setBounds(10, 498, 67, 14);
-		panel.add(lblNewLabel_1);
+
+		JButton exportButton = new JButton("Export ");
+		exportButton.setBounds(498, 542, 101, 23);
+		fullPanel.add(exportButton);
+
+		JLabel exportEncryptedLabel = new JLabel("Export encrypted ");
+		exportEncryptedLabel.setBounds(498, 468, 101, 14);
+		fullPanel.add(exportEncryptedLabel);
+
+		JLabel photoToNewLabel = new JLabel("       photo to new ");
+		photoToNewLabel.setBounds(498, 483, 101, 14);
+		fullPanel.add(photoToNewLabel);
+
+		JLabel locationLabel = new JLabel("                location");
+		locationLabel.setBounds(498, 500, 101, 14);
+		fullPanel.add(locationLabel);
+
+		JLabel instructionsLabel = new JLabel("Photo that needs encryption may be dragged to the box below or you may use the browse button");
+		instructionsLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+		instructionsLabel.setBounds(10, 11, 575, 14);
+		fullPanel.add(instructionsLabel);
+
+		newPhotoTitleTextField = new JTextField();
+		newPhotoTitleTextField.setToolTipText("New title");
+		newPhotoTitleTextField.setBounds(139, 545, 309, 20);
+		fullPanel.add(newPhotoTitleTextField);
+		newPhotoTitleTextField.setColumns(10);
+
+		JLabel newPhotoTitleLabel = new JLabel("Title of your new photo when exported...");
+		newPhotoTitleLabel.setBounds(139, 520, 245, 14);
+		fullPanel.add(newPhotoTitleLabel);
 		
-		JButton btnNewButton_1 = new JButton("Export ");
-		btnNewButton_1.setBounds(498, 518, 101, 47);
-		panel.add(btnNewButton_1);
+		JButton encryptButton = new JButton("Encrypt");
+		encryptButton.setBounds(498, 518, 101, 23);
+		fullPanel.add(encryptButton);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(10, 34, 589, 423);
-		panel.add(panel_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("Export encrypted ");
-		lblNewLabel_2.setBounds(508, 466, 87, 14);
-		panel.add(lblNewLabel_2);
+
+		/**
+		 * make events down here
+		 */
+		exportButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pic.export(newPhotoTitleTextField.getText());
+			}
+		});
 		
-		JLabel lblNewLabel_3 = new JLabel("       photo to new ");
-		lblNewLabel_3.setBounds(508, 481, 101, 14);
-		panel.add(lblNewLabel_3);
+		encryptButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		
-		JLabel lblNewLabel_4 = new JLabel("                location");
-		lblNewLabel_4.setBounds(508, 498, 87, 14);
-		panel.add(lblNewLabel_4);
-		
-		JLabel lblNewLabel_5 = new JLabel("Photo that needs encryption may be dragged to the box below or you may use the browse button");
-		lblNewLabel_5.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
-		lblNewLabel_5.setBounds(10, 11, 575, 14);
-		panel.add(lblNewLabel_5);
-		
-		textField = new JTextField();
-		textField.setBounds(139, 545, 309, 20);
-		panel.add(textField);
-		textField.setColumns(10);
-		
-		JLabel lblWriteTheTitle = new JLabel("Title of your new photo when exported...");
-		lblWriteTheTitle.setBounds(139, 518, 222, 14);
-		panel.add(lblWriteTheTitle);
+		browseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showOpenDialog(null);
+
+				File file = null;
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					file = fc.getSelectedFile();
+					//This is where a real application would open the file.
+					System.out.println("Opening: " + file.getName() + ".\n File path + " + file.getPath());
+					pic = new Picture(file.getPath());
+				} else {
+					System.out.println("Open command cancelled by user.\n");
+
+				}
+			
+				if(pic != null) {
+					Image dimg = pic.getImage().getScaledInstance(photoLabel.getWidth(), photoLabel.getHeight(),
+							Image.SCALE_SMOOTH);
+					ImageIcon imageIcon = new ImageIcon(dimg);
+					photoLabel.setText("");
+					photoLabel.setIcon(imageIcon);
+					System.out.println("Image added");
+				}
+			}
+		});
 	}
 }
 
