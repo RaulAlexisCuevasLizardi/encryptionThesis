@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.io.File;
 import java.util.Scanner;
@@ -9,16 +8,19 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-
 import java.awt.Font;
 import java.awt.Image;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
+@SuppressWarnings("serial")
 public class PixelManipulation extends JFrame {
 
 	static BufferedImage img = null;
@@ -29,7 +31,7 @@ public class PixelManipulation extends JFrame {
 	private JPanel contentPane;
 	private JTextField newPhotoTitleTextField;
 	@SuppressWarnings("unused")
-	private JLabel photoPanel;
+	private JPanel photoPanel;
 	private JLabel photoLabel;
 
 	/**
@@ -39,7 +41,8 @@ public class PixelManipulation extends JFrame {
 	public static void main(String[] args) throws PixelValueException {
 		kb = new Scanner(System.in);
 		pic = null;
-		PictureEncryptor c = null;
+		@SuppressWarnings("unused")
+		PictureEncryptor encryptor = null;
 		//		System.out.println("Enter the file name of the picture that will be encrypted.");
 		//		String outputFilename = kb.nextLine();
 		//		c.Encrypt();
@@ -75,7 +78,7 @@ public class PixelManipulation extends JFrame {
 		contentPane.add(fullPanel);
 		fullPanel.setLayout(null);
 
-		JPanel photoPanel = new JPanel();
+		photoPanel = new JPanel();
 		photoPanel.setBackground(Color.WHITE);
 		photoPanel.setBounds(10, 36, 589, 432);
 		fullPanel.add(photoPanel);
@@ -86,12 +89,9 @@ public class PixelManipulation extends JFrame {
 		photoLabel.setText("Your photo will be displayed here");
 		photoLabel.setBounds(0, 0, 589, 432);
 		photoPanel.add(photoLabel);
-		
-		photoLabel.setForeground(Color.BLACK);
-		photoLabel.setBackground(Color.WHITE);
-		
+
 		JButton browseButton = new JButton("Browse...");
-		
+		browseButton.setToolTipText("Search for a picture to encrypt in your file directory");
 		browseButton.setBounds(10, 518, 95, 47);
 		fullPanel.add(browseButton);
 
@@ -103,9 +103,10 @@ public class PixelManipulation extends JFrame {
 		JLabel toEncryptLabel = new JLabel("to encrypt");
 		toEncryptLabel.setBounds(10, 498, 67, 14);
 		fullPanel.add(toEncryptLabel);
-		
+
 
 		JButton exportButton = new JButton("Export ");
+		exportButton.setToolTipText("Export your picture into a directory of your choosing");
 		exportButton.setBounds(498, 542, 101, 23);
 		fullPanel.add(exportButton);
 
@@ -121,11 +122,6 @@ public class PixelManipulation extends JFrame {
 		locationLabel.setBounds(498, 500, 101, 14);
 		fullPanel.add(locationLabel);
 
-		JLabel instructionsLabel = new JLabel("Photo that needs encryption may be dragged to the box below or you may use the browse button");
-		instructionsLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
-		instructionsLabel.setBounds(10, 11, 575, 14);
-		fullPanel.add(instructionsLabel);
-
 		newPhotoTitleTextField = new JTextField();
 		newPhotoTitleTextField.setToolTipText("New title");
 		newPhotoTitleTextField.setBounds(139, 545, 309, 20);
@@ -133,30 +129,78 @@ public class PixelManipulation extends JFrame {
 		newPhotoTitleTextField.setColumns(10);
 
 		JLabel newPhotoTitleLabel = new JLabel("Title of your new photo when exported...");
-		newPhotoTitleLabel.setBounds(139, 520, 245, 14);
+		newPhotoTitleLabel.setBounds(139, 518, 245, 14);
 		fullPanel.add(newPhotoTitleLabel);
-		
-		JButton encryptButton = new JButton("Encrypt");
-		encryptButton.setBounds(498, 518, 101, 23);
-		fullPanel.add(encryptButton);
-		
-		
+
+		JButton encryptAndDecryptButton = new JButton("Encrypt");
+		encryptAndDecryptButton.setToolTipText("Encrypt your picture to make it more secure");
+		encryptAndDecryptButton.setBounds(498, 518, 101, 23);
+		fullPanel.add(encryptAndDecryptButton);
+
+		/**
+		 * TODO Use this ButtonGroup to switch encryptButton to a decryptButton
+		 */
+		ButtonGroup buttonGroup = new ButtonGroup();
+
+		JRadioButton encryptRadioButton = new JRadioButton("Encrypt");
+
+		encryptRadioButton.setSelected(true);
+		encryptRadioButton.setToolTipText("Switch to the window for encrypting");
+		encryptRadioButton.setBounds(6, 6, 73, 23);
+		fullPanel.add(encryptRadioButton);
+		buttonGroup.add(encryptRadioButton);
+
+		JRadioButton decryptRadioButton = new JRadioButton("Decrypt");
+
+		decryptRadioButton.setToolTipText("Switch to the window for decrypting");
+		decryptRadioButton.setBounds(81, 6, 109, 23);
+		fullPanel.add(decryptRadioButton);
+		buttonGroup.add(decryptRadioButton);
+
+		JLabel modeLabel = new JLabel("Encryption mode");
+		modeLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+		modeLabel.setBounds(232, 10, 109, 14);
+		fullPanel.add(modeLabel);
+
 
 		/**
 		 * make events down here
 		 */
 		exportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				pic.export(newPhotoTitleTextField.getText());
+				if(pic != null) {
+					if(newPhotoTitleTextField.getText() != null)
+						pic.export(newPhotoTitleTextField.getText());
+					else
+						pic.export();
+					System.out.println("Picture has been exported.");
+				}else {
+					JOptionPane.showMessageDialog(null , "No chosen photo. Choose a photo before pressing the export button.");
+				}
 			}
 		});
-		
-		encryptButton.addActionListener(new ActionListener() {
+
+		encryptAndDecryptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				if(encryptRadioButton.isSelected()) {
+					if(pic != null) {
+						pic.randomizePixels();
+						Image dimg = pic.getImage().getScaledInstance(photoLabel.getWidth(), photoLabel.getHeight(),
+								Image.SCALE_SMOOTH);
+						ImageIcon imageIcon = new ImageIcon(dimg);
+						photoLabel.setText("");
+						photoLabel.setIcon(imageIcon);
+						System.out.println("Image added");
+					}else {
+						JOptionPane.showMessageDialog(null, "No chosen photo. Choose a photo before pressing the encrypt button.");
+					}
+
+				}else if(decryptRadioButton.isSelected()) {
+					//TODO decrypt stuff
+				}
 			}
 		});
-		
+
 		browseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
@@ -172,7 +216,7 @@ public class PixelManipulation extends JFrame {
 					System.out.println("Open command cancelled by user.\n");
 
 				}
-			
+
 				if(pic != null) {
 					Image dimg = pic.getImage().getScaledInstance(photoLabel.getWidth(), photoLabel.getHeight(),
 							Image.SCALE_SMOOTH);
@@ -181,6 +225,23 @@ public class PixelManipulation extends JFrame {
 					photoLabel.setIcon(imageIcon);
 					System.out.println("Image added");
 				}
+			}
+		});
+
+		encryptRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				modeLabel.setText("Encryption mode");
+				encryptAndDecryptButton.setText("Encrypt");
+				JOptionPane.showMessageDialog(null, "Switched to encryption mode.");
+			}
+		});
+
+		decryptRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				modeLabel.setText("Decryption mode");
+				encryptAndDecryptButton.setText("Decrypt");
+				toEncryptLabel.setText("to decrypt");
+				JOptionPane.showMessageDialog(null, "Switched to decryption mode.");
 			}
 		});
 	}
