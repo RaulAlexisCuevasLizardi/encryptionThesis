@@ -156,12 +156,7 @@ public class PixelManipulation extends JFrame {
 		decryptRadioButton.setBounds(81, 6, 109, 23);
 		fullPanel.add(decryptRadioButton);
 		buttonGroup.add(decryptRadioButton);
-
-		JLabel modeLabel = new JLabel("Encryption mode");
-		modeLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
-		modeLabel.setBounds(232, 10, 109, 14);
-		fullPanel.add(modeLabel);
-
+		System.out.println("hello");
 
 		/**
 		 * make events down here
