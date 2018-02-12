@@ -1,3 +1,4 @@
+package photoEncryption;
 
 
 /**
@@ -7,10 +8,10 @@
  */
 public class ARGBPixel implements Comparable<ARGBPixel>{
 	private int p; //Value that represents this pixel's color.
-	private int alpha; //Value that represents the opacity of this pixel.
-	private int red; //Value that represents the red component of this pixel.
-	private int green; //Value that represents the green component of this pixel.
-	private int blue; //Value that represents the blue component of this pixel.
+	private byte alpha; //Value that represents the opacity of this pixel.
+	private byte red; //Value that represents the red component of this pixel.
+	private byte green; //Value that represents the green component of this pixel.
+	private byte blue; //Value that represents the blue component of this pixel.
 
 	/**
 	 * Constructor to the ARGBPixel class. Sets this pixel's P value to the desired number.
@@ -29,8 +30,8 @@ public class ARGBPixel implements Comparable<ARGBPixel>{
 	 * @param blue represents the blue component of this pixel.
 	 * @throws PixelValueException if any of the pixel component values are more than 255 or less than 0.
 	 */
-	public ARGBPixel(int alpha, int red, int green, int blue) throws PixelValueException{
-		if(alpha > 255 || alpha < 0 || red > 255 || red < 0 || blue > 255 || blue < 0 || green > 255 || green < 0 ){
+	public ARGBPixel(byte alpha, byte red, byte green, byte blue) throws PixelValueException{
+		if(alpha > 128 || alpha < -128 || red > 127 || red < -128 || blue > 127 || blue < -128 || green > 127 || green < -128 ){
 			throw new PixelValueException();
 		}
 		else{			
@@ -43,39 +44,39 @@ public class ARGBPixel implements Comparable<ARGBPixel>{
 	 * @return this pixel's P value.
 	 */
 	public int getP() {
-		return p;
+		return this.p;
 	}
 
 	/**
 	 * Returns this pixel's alpha component value.
 	 * @return this pixel's alpha component value
 	 */
-	public int getAlpha() {
-		return alpha;
+	public byte getAlpha() {
+		return this.alpha;
 	}
 
 	/**
 	 * Returns this pixel's red component value.
 	 * @return this pixel's red component value
 	 */
-	public int getRed() {
-		return red;
+	public byte getRed() {
+		return this.red;
 	}
 
 	/**
 	 * Returns this pixel's green component value.
 	 * @return this pixel's green component value
 	 */
-	public int getGreen() {
-		return green;
+	public byte getGreen() {
+		return this.green;
 	}
 
 	/**
 	 * Returns this pixel's blue component value.
 	 * @return this pixel's blue component value
 	 */
-	public int getBlue() {
-		return blue;
+	public byte getBlue() {
+		return this.blue;
 	}
 
 	/**
@@ -89,10 +90,10 @@ public class ARGBPixel implements Comparable<ARGBPixel>{
 		}
 		else{
 			this.p = p;
-			this.alpha = (p>>24) & 0xFF;
-			this.red = (p>>16) & 0xFF;
-			this.green = (p>>8) & 0xFF;
-			this.blue = p & 0xFF;
+			this.alpha = (byte) ((p>>24) & 0xFF);
+			this.red = (byte) ((p>>16) & 0xFF);
+			this.green = (byte) ((p>>8) & 0xFF);
+			this.blue = (byte) (p & 0xFF);
 		}
 	}
 
@@ -104,8 +105,8 @@ public class ARGBPixel implements Comparable<ARGBPixel>{
 	 * @param blue represents the blue component of this pixel.
 	 * @throws PixelValueException if any of the pixel component values are more than 255 or less than 0.
 	 */
-	public void setARGB(int alpha, int red, int green, int blue) throws PixelValueException{
-		if(alpha > 255 || alpha < 0 || red > 255 || red < 0 || blue > 255 || blue < 0 || green > 255 || green < 0 ){
+	public void setARGB(byte alpha, byte red, byte green, byte blue) throws PixelValueException{
+		if(alpha > 127 || alpha < -128 || red > 127 || red < -128 || blue > 127 || blue < -128 || green > 127 || green < -128 ){
 			throw new PixelValueException();
 		}
 		else{			
@@ -118,8 +119,8 @@ public class ARGBPixel implements Comparable<ARGBPixel>{
 	 * @param alpha represents the alpha component of this pixel.
 	 * @throws PixelValueException if the alpha component value is higher than 255 or less than 0.
 	 */
-	public void setAlpha(int alpha) throws PixelValueException {
-		if(alpha > 255 || alpha < 0){
+	public void setAlpha(byte alpha) throws PixelValueException {
+		if(alpha > 127 || alpha < -128){
 			throw new PixelValueException();
 		}else{			
 			this.setP((alpha<<24) | (this.red<<16) | (this.green<<8) | this.blue);
@@ -131,8 +132,8 @@ public class ARGBPixel implements Comparable<ARGBPixel>{
  * @param red represents the red component of this pixel.
  * @throws PixelValueException if the red component value is more than 255 or less than 0. 
  */
-	public void setRed(int red) throws PixelValueException {
-		if(red > 255 || red < 0){
+	public void setRed(byte red) throws PixelValueException {
+		if(red > 127 || red < -128){
 			throw new PixelValueException();
 		}else{			
 			this.setP((this.alpha<<24) | (red<<16) | (this.green<<8) | this.blue);
@@ -144,8 +145,8 @@ public class ARGBPixel implements Comparable<ARGBPixel>{
  * @param green represents the green component of this pixel.
  * @throws PixelValueException if the green component value is more than 255 or less than 0.
  */
-	public void setGreen(int green) throws PixelValueException {
-		if(green > 255 || green < 0){
+	public void setGreen(byte green) throws PixelValueException {
+		if(green > 127 || green < -128){
 			throw new PixelValueException();
 		}else{			
 			this.setP((this.alpha<<24) | (this.red<<16) | (green<<8) | this.blue);
@@ -157,8 +158,8 @@ public class ARGBPixel implements Comparable<ARGBPixel>{
  * @param blue represents the blue component of this pixel.
  * @throws PixelValueException if the blue component value is more than 255 or less than 0.
  */
-	public void setBlue(int blue) throws PixelValueException {
-		if(blue > 255 || blue < 0){
+	public void setBlue(byte blue) throws PixelValueException {
+		if(blue > 127 || blue < -128){
 			throw new PixelValueException();
 		}else{			
 			this.setP((this.alpha<<24) | (this.red<<16) | (this.green<<8) | blue);
@@ -170,8 +171,16 @@ public class ARGBPixel implements Comparable<ARGBPixel>{
 	 */
 	@Override
 	public String toString() {
-		return "ARGBPixel [p=" + p + ", alpha=" + alpha + ", red=" + red
-				+ ", green=" + green + ", blue=" + blue + "]";
+		return "ARGBPixel [p=" + p + ", alpha=" + this.alpha + ", red=" + this.red
+				+ ", green=" + this.green + ", blue=" + this.blue + "]";
+	}
+	/**
+	 * Returns this ARGBPixel's color components in a byte array.
+	 * @return this ARGBPixel's color components in a byte array.
+	 */
+	public byte[] toByteArray() {
+		byte[] byteArray = {this.alpha, this.red, this.green, this.blue};
+		return byteArray;
 	}
 
 	/**
