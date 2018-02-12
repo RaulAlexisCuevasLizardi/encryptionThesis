@@ -1,7 +1,8 @@
+package photoEncryption;
 import java.awt.EventQueue;
 import java.io.File;
-import java.util.Scanner;
-import java.awt.image.BufferedImage;
+import java.io.PrintWriter;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -23,30 +24,21 @@ import javax.swing.ButtonGroup;
 @SuppressWarnings("serial")
 public class PixelManipulation extends JFrame {
 
-	static BufferedImage img = null;
-	static Picture pic;
-	static ARGBPixel pixels [][];
-	static File f = null;
-	static Scanner kb;
+	private static Picture pic;
+	private static PictureEncryptor encryptor = null;
 	private JPanel contentPane;
 	private JTextField newPhotoTitleTextField;
 	@SuppressWarnings("unused")
 	private JPanel photoPanel;
 	private JLabel photoLabel;
+	private PrintWriter writer;
 
 	/**
 	 * Launch the application.
 	 * @throws PixelValueException 
 	 */
 	public static void main(String[] args) throws PixelValueException {
-		kb = new Scanner(System.in);
 		pic = null;
-		@SuppressWarnings("unused")
-		PictureEncryptor encryptor = null;
-		//		System.out.println("Enter the file name of the picture that will be encrypted.");
-		//		String outputFilename = kb.nextLine();
-		//		c.Encrypt();
-		//		c.ExportPicture(outputFilename);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -138,12 +130,11 @@ public class PixelManipulation extends JFrame {
 		fullPanel.add(encryptAndDecryptButton);
 
 		/**
-		 * TODO Use this ButtonGroup to switch encryptButton to a decryptButton
+		 *Use this ButtonGroup to switch encryptButton to a decryptButton
 		 */
 		ButtonGroup buttonGroup = new ButtonGroup();
 
 		JRadioButton encryptRadioButton = new JRadioButton("Encrypt");
-
 		encryptRadioButton.setSelected(true);
 		encryptRadioButton.setToolTipText("Switch to the window for encrypting");
 		encryptRadioButton.setBounds(6, 6, 73, 23);
@@ -151,7 +142,6 @@ public class PixelManipulation extends JFrame {
 		buttonGroup.add(encryptRadioButton);
 
 		JRadioButton decryptRadioButton = new JRadioButton("Decrypt");
-
 		decryptRadioButton.setToolTipText("Switch to the window for decrypting");
 		decryptRadioButton.setBounds(81, 6, 109, 23);
 		fullPanel.add(decryptRadioButton);
@@ -162,20 +152,35 @@ public class PixelManipulation extends JFrame {
 		modeLabel.setBounds(232, 10, 109, 14);
 		fullPanel.add(modeLabel);
 
-
 		/**
 		 * make events down here
 		 */
 		exportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(pic != null) {
-					if(newPhotoTitleTextField.getText() != null)
-						pic.export(newPhotoTitleTextField.getText());
-					else
-						pic.export();
-					System.out.println("Picture has been exported.");
-				}else {
-					JOptionPane.showMessageDialog(null , "No chosen photo. Choose a photo before pressing the export button.");
+				if(encryptRadioButton.isSelected()) {
+					if(pic != null) {
+						if(newPhotoTitleTextField.getText() != null) {
+							pic.export(newPhotoTitleTextField.getText());
+							System.out.println("Picture has been exported. With the name " + newPhotoTitleTextField.getText() + ".");
+						}else {
+							pic.export();
+							System.out.println("Picture has been exported.");
+						}
+					}else {
+						JOptionPane.showMessageDialog(null , "No chosen photo. Choose a photo before pressing the export button.");
+					}
+				}else if(decryptRadioButton.isSelected()) {
+					if(encryptor != null) {
+						if(newPhotoTitleTextField.getText() != null) {
+							encryptor.ExportPicture(newPhotoTitleTextField.getText());
+							System.out.println("Encrypted picture has been exported. With the name " + newPhotoTitleTextField.getText() + ".");
+						}else {
+							encryptor.ExportPicture();
+							System.out.println("Encrypted picture has been exported.");
+						}
+					}else {
+						JOptionPane.showMessageDialog(null, "No encrypted photo to export.");
+					}
 				}
 			}
 		});
@@ -184,19 +189,42 @@ public class PixelManipulation extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(encryptRadioButton.isSelected()) {
 					if(pic != null) {
-						pic.randomizePixels();
+						if(encryptor != null) {
+							try {
+								encryptor.Encrypt();
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}else {
+							System.out.println("No picture to encrypt.");
+						}
+						pic.r();
 						Image dimg = pic.getImage().getScaledInstance(photoLabel.getWidth(), photoLabel.getHeight(),
 								Image.SCALE_SMOOTH);
 						ImageIcon imageIcon = new ImageIcon(dimg);
 						photoLabel.setText("");
 						photoLabel.setIcon(imageIcon);
-						System.out.println("Image added");
+						System.out.println("Image encrypted.");
 					}else {
 						JOptionPane.showMessageDialog(null, "No chosen photo. Choose a photo before pressing the encrypt button.");
 					}
 
 				}else if(decryptRadioButton.isSelected()) {
-					//TODO decrypt stuff
+					if(pic != null) {
+						if(encryptor != null) {
+							try {
+								encryptor.Decrypt();
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}else {
+							System.out.println("No picture to decrypt.");
+						}
+
+						System.out.println("Image decrypted.");
+					}else {
+						JOptionPane.showMessageDialog(null, "No chosen photo. Choose a photo before pressing the encrypt button.");
+					}
 				}
 			}
 		});
@@ -209,9 +237,16 @@ public class PixelManipulation extends JFrame {
 				File file = null;
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					file = fc.getSelectedFile();
-					//This is where a real application would open the file.
 					System.out.println("Opening: " + file.getName() + ".\n File path + " + file.getPath());
 					pic = new Picture(file.getPath());
+					try {
+						encryptor = new PictureEncryptor(pic);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					//System.out.println("Picture has: " + pic.P_ValueToString().length());
+					//System.out.println(Arrays.toString(pic.P_ValueToString().getBytes()));
+					System.out.println("Picture has: " + pic.getAmountOfPixels() + " pixels, " + pic.getAmountOfBytes() + " bytes, " + pic.getAmountOfBits() + " bits");
 				} else {
 					System.out.println("Open command cancelled by user.\n");
 
