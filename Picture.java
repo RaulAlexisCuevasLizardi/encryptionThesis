@@ -1,3 +1,4 @@
+package photoEncryption;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,10 +15,14 @@ import javax.imageio.ImageIO;
  */
 public class Picture{
 	private static File f; //The file that contains the image for this picture.
+	private String name;
 	private static BufferedImage img; //An object that contains the data for this picture.
 	public final int width; //Width of this picture.
 	public final int height; //Height of this picture.
 	private ARGBPixel pixels[][]; //Double array of ARGBPixels that represent this picture. 
+	private int amountOfPixels; //Amount of pixels in this picture. This is width*height.
+	private int amountOfBytes; //Amount of bytes in this picture. This will be useful for encrypting later on. This is amountOfPixels * 4
+	private int amountOfBits; //Amount of bits in this picture. This is just amountOfBytes * 8
 
 	/**
 	 * Constructor of the Picture class that receives the filepath of the picture. Using the filepath it creates a file object and 
@@ -32,9 +37,13 @@ public class Picture{
 		}catch(IOException e){
 			System.out.println(e);
 		}
+		name = f.getName();
 		height = img.getHeight();
 		width = img.getWidth();
 		pixels = new ARGBPixel[width][height];
+		amountOfPixels = width*height;
+		amountOfBytes = amountOfPixels*4;
+		amountOfBits = amountOfBytes*8;
 
 		for(int i = 0; i < width; i++){
 			for(int j = 0; j < height; j++){
@@ -65,18 +74,42 @@ public class Picture{
 	public ARGBPixel[][] getPixels() {
 		return pixels;
 	}
+	/**
+	 * Return the amount of Pixels in this picture.
+	 * @return the amount of Pixels in this picture.
+	 */
+	public int getAmountOfPixels() {
+		return amountOfPixels;
+	}
+	/**
+	 * Return the amount of bytes in this picture.
+	 * @return the amount of bytes in this picture.
+	 */
+	public int getAmountOfBytes() {
+		return amountOfBytes;
+	}
+	/**
+	 * Return the amount of bits in this picture.
+	 * @return the amount of bits in this picture.
+	 */
+	public int getAmountOfBits() {
+		return amountOfBits;
+	}
 
 	/**
-	 * Sets the pixels of this picture to the received double array of ARGBPixels. This can only work if the height and length
-	 * of the received pixels are the same of the original height and width of this picture.
-	 * @param Double array of ARGBPixels. Height and length of the received pixels must be equal to the original height and 
-	 * width of this picture.
+	 * I changed my mind. This method will not be used. If you want to change pixels in
 	 */
-	public void setPixels(ARGBPixel[][] pixels) {
-		if(pixels.length == this.pixels.length && pixels[0].length == this.pixels[0].length ){
-			this.pixels = pixels;
-		}
-	}
+//	/**
+//	 * Sets the pixels of this picture to the received double array of ARGBPixels. This can only work if the height and length
+//	 * of the received pixels are the same of the original height and width of this picture.
+//	 * @param Double array of ARGBPixels. Height and length of the received pixels must be equal to the original height and 
+//	 * width of this picture.
+//	 */
+//	public void setPixels(ARGBPixel[][] pixels) {
+//		if(pixels.length == this.pixels.length && pixels[0].length == this.pixels[0].length ){
+//			this.pixels = pixels;
+//		}
+//	}
 	/**
 	 * Returns this picture's BufferedImage.
 	 * @return this picture's BufferedImage.
@@ -101,7 +134,18 @@ public class Picture{
 	 */
 	public void export(String outputFilename){
 		try{
-			f = new File("C:\\Users\\841111795\\Desktop\\" + outputFilename + ".jpg");
+			f = new File("C:\\Users\\Alexi\\Desktop\\" + outputFilename + ".jpg");
+			ImageIO.write(img, "jpg", f);
+		}catch(IOException e){
+			System.out.println(e);
+		}
+	}
+	/**
+	 * 
+	 */
+	public void export(){
+		try{
+			f = new File("C:\\Users\\Alexi\\Desktop\\" + f.getName() + "export" + ".jpg");
 			ImageIO.write(img, "jpg", f);
 		}catch(IOException e){
 			System.out.println(e);
@@ -112,41 +156,43 @@ public class Picture{
 	 * [0][0] is the starting point and [length-1][length-1] is the end point.
 	 * @throws PixelValueException if a pixel's P value exceeds Integer.Maximum or is less than 0.
 	 */
-	public void pixelSort() throws PixelValueException{
-		//****Sorting algorithm taken from the Internet****
-		int temp = 0;
-		for(int x = 0; x < width; x++)
-		{
-			for(int y = 0; y < height; y++)
-			{
-				for(int i = 0; i < width; i++)
-				{
-					for(int j = 0; j < height; j++)
-					{
-						if(pixels[i][j].compareTo(pixels[x][y]) > 0)
-						{
-							temp = pixels[x][y].getP();
-							pixels[x][y].setP(pixels[i][j].getP());
-							pixels[i][j].setP(temp);
-						}
-					}
-				}
-			}
-		}
-
-		for(int i = 0; i < width; i++){
-			for(int j = 0; j < height; j++){
-				int color = pixels[i][j].getP();
-				changeSpecificPixel(i, j, color);
-			}
-		}
-
-	}
+//	public void pixelSort() throws PixelValueException{
+//		//THIS IS 100% USELESS. EXTREMELY BAD ALGORITHM WITH O(n^4)....
+//		//****Sorting algorithm taken from the Internet****
+//		int temp = 0;
+//		for(int x = 0; x < width; x++)//n = 2560
+//		{
+//			for(int y = 0; y < height; y++)//n = 1440
+//			{
+//				for(int i = 0; i < width; i++)//n = 2560
+//				{
+//					for(int j = 0; j < height; j++)//n = 1440
+//					{
+//						if(pixels[i][j].compareTo(pixels[x][y]) > 0)
+//						{
+//							temp = pixels[x][y].getP();
+//							pixels[x][y].setP(pixels[i][j].getP());
+//							pixels[i][j].setP(temp);
+//							System.out.println("Sorting... Pixel " + x + " " + y + " with " + i + " " + j);
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//		for(int i = 0; i < width; i++){
+//			for(int j = 0; j < height; j++){
+//				int color = pixels[i][j].getP();
+//				changeSpecificPixel(i, j, color);
+//			}
+//		}
+//
+//	}
 
 	/**
 	 * Randomizes the pixels of this picture. Mostly used for testing.
 	 */
-	public void randomizePixels(){
+	public void r(){
 		for(int i = 0; i < width; i++){
 			for(int j = 0; j < height; j++){
 				int color = new Random().nextInt();
@@ -161,7 +207,7 @@ public class Picture{
 	 * @param j Indicates the row where the pixel resides.
 	 * @param color The P value of the desired color.
 	 */
-	private void changeSpecificPixel(int i, int j, int color){
+	public void changeSpecificPixel(int i, int j, int color){
 		img.setRGB(i, j, color);
 		try {
 			pixels[i][j].setP(color);
@@ -169,7 +215,47 @@ public class Picture{
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * This method changes the pixel at index [i][j] to the color composed of the components given. 
+	 * @param i Indicates the column where the pixel resides.
+	 * @param j Indicates the row where the pixel resides.
+	 * @param alpha 
+	 * @param red
+	 * @param green
+	 * @param blue
+	 */
+	public void changeSpecificPixel(int i, int j, byte alpha, byte red, byte green, byte blue){
+		img.setRGB(i, j, ((alpha<<24) | (red<<16) | (green<<8) | blue));
+		try {
+			pixels[i][j].setARGB(alpha, red, green, blue);
+		} catch (PixelValueException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 
+	 * @param i
+	 * @param j
+	 * @return
+	 */
+	public byte[] getPixelInByteArray(int i, int j) {
+		return pixels[i][j].toByteArray();
+	}
 	
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * This method returns a string with all the P values of every pixel in this picture
 	 * THIS NEEDS SOME CHANGING. I THINK IT MIGHT BE BETTER TO CONVERT THE INT VALUE INTO
@@ -181,11 +267,10 @@ public class Picture{
 		DecimalFormat fmt = new DecimalFormat("0000");
 		for(int i = 0; i < this.width; i++){
 			for(int j = 0; j < this.height; j++){
-				String p_value = String.valueOf(fmt.format(this.pixels[i][j].getP()));
+				String p_value = String.valueOf(fmt.format(this.pixels[i][j].getP()) + "\n");
 				str.append(p_value);
 			}
 		}
 		return str.toString();
-		
 	}
 }
